@@ -2,29 +2,57 @@
  * @fileoverview feature sliced relative path checker
  * @author villimon
  */
-'use strict';
+'use strict'
 
 //------------------------------------------------------------------------------
 // Requirements
 //------------------------------------------------------------------------------
 
 const rule = require('../../../lib/rules/path-checker'),
-    RuleTester = require('eslint').RuleTester;
+    RuleTester = require('eslint').RuleTester
 
 //------------------------------------------------------------------------------
 // Tests
 //------------------------------------------------------------------------------
 
-const ruleTester = new RuleTester();
+const ruleTester = new RuleTester()
 ruleTester.run('path-checker', rule, {
     valid: [
-        // give me some code that won't trigger a warning
+        {
+            filename:
+                'C:\\Users\\tim\\Desktop\\javascript\\production_project\\src\\entities\\Article',
+            code: "import {addCommentFormActions,addCommentFormReducer} from '../../model/slice/addCommentFormSlice';",
+            errors: [],
+        },
     ],
 
     invalid: [
         {
-            code: '',
-            errors: [{ messageId: 'Fill me in.', type: 'Me too' }],
+            filename:
+                'C:\\Users\\tim\\Desktop\\javascript\\production_project\\src\\pages\\Article',
+            code: "import {addCommentFormActions,addCommentFormReducer} from '@/pages/Article/model/slice/addCommentFormSlice';",
+            errors: [
+                {
+                    message:
+                        'В рамках одного слайса все пути должны быть относительными',
+                },
+            ],
+            options: [
+                {
+                    alias: '@',
+                },
+            ],
+        },
+        {
+            filename:
+                'C:\\Users\\tim\\Desktop\\javascript\\production_project\\src\\pages\\Article',
+            code: "import {addCommentFormActions,addCommentFormReducer} from 'pages/Article/model/slice/addCommentFormSlice';",
+            errors: [
+                {
+                    message:
+                        'В рамках одного слайса все пути должны быть относительными',
+                },
+            ],
         },
     ],
-});
+})
